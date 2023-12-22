@@ -1,0 +1,24 @@
+WITH MonthlyUserCounts AS (
+  SELECT
+    EXTRACT(YEAR FROM block_time) AS year,
+    EXTRACT(MONTH FROM block_time) AS month,
+    EXTRACT(DAY FROM block_time) AS day,
+    COUNT(DISTINCT "from") AS from_count
+  FROM ethereum.transactions
+  WHERE
+    block_time >= TRY_CAST('2023-01-01' AS DATE)
+  GROUP BY
+    EXTRACT(YEAR FROM block_time),
+    EXTRACT(MONTH FROM block_time),
+    EXTRACT(DAY FROM block_time)
+)
+SELECT
+  year,
+  month,
+  day,
+  from_count
+FROM MonthlyUserCounts
+ORDER BY
+  year,
+  month,
+  day
